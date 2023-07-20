@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import postRoutes from "./routes/posts.js";
@@ -19,12 +18,11 @@ app.use(cacheMiddleware())
 app.use("/posts", postRoutes);
 app.use("/user", userRoutes);
 
-const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
-    connectDB(CONNECTION_URL);
+    connectDB(process.env.CONNECTION_URL);
 
     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
   } catch (error) {
