@@ -14,21 +14,6 @@ export const getPosts = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-export const getAllPosts = async (req, res) => {
-    const { page } = req.query;
-    
-    try {
-        const LIMIT = 12;
-        const startIndex = (Number(page) - 1) * LIMIT; 
-    
-        const total = await PostDescription.countDocuments({});
-        const posts = await PostDescription.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
-
-        res.status(200).json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
-    } catch (error) {    
-        res.status(404).json({ message: error.message });
-    }
-}
 
 
 export const getPostsBySearch = async (req, res) => {
