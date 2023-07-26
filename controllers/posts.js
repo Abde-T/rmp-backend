@@ -7,7 +7,7 @@ const router = express.Router();
 export const getPosts = async (req, res) => { 
     try {
         
-        const PostsDescription = await PostDescription.find();
+        const PostsDescription = await PostDescription.find().lean();
                 
         res.status(200).json(PostsDescription);
     } catch (error) {
@@ -22,7 +22,7 @@ export const getPostsBySearch = async (req, res) => {
     try {
         const title = new RegExp(searchQuery, "i");
 
-        const posts = await PostDescription.find({ $or: [ { title }, { tags: { $in: tags.split(',') } } ]});
+        const posts = await PostDescription.find({ $or: [ { title }, { tags: { $in: tags.split(',') } } ]}).lean();
 
         res.json({ data: posts });
     } catch (error) {    
@@ -34,7 +34,7 @@ export const getPost = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await PostDescription.findById(id);
+        const post = await PostDescription.findById(id).lean();
         
         res.status(200).json(post);
     } catch (error) {
@@ -46,7 +46,7 @@ export const getPostsByCreator = async (req, res) => {
     const { name } = req.query;
 
     try {
-        const posts = await PostDescription.find({ name });
+        const posts = await PostDescription.find({ name }).lean();
 
         res.json({ data: posts });
     } catch (error) {    

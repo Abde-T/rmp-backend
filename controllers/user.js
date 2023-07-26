@@ -1,28 +1,33 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
 import User from "../models/user.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
+const generateToken = (email, id) => {
+  return jwt.sign({ email, id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
+
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const oldUser = await User.findOne({ email });
-    if (!oldUser)
+    const user = await User.findOne({ email });
+
+    if (!user) {
       return res.status(404).json({ message: "User doesn't exist" });
-    const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
-    if (!isPasswordCorrect)
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
-    const token = jwt.sign(
-      { email: oldUser.email, id: oldUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.status(200).json({ result: oldUser, token });
-  } catch (err) {
+    }
+
+    const token = generateToken(user.email, user._id);
+    res.status(200).json({ result: user, token });
+  } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -41,13 +46,19 @@ export const signup = async (req, res) => {
   } = req.body;
 
   try {
-    const oldUser = await User.findOne({ email });
-    if (oldUser)
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists." });
-    if (password !== confirmPassword)
+    }
+
+    if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords don't match." });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await User.create({
+
+    const newUser = await User.create({
       email,
       password: hashedPassword,
       name: `${firstName} ${lastName}`,
@@ -56,14 +67,10 @@ export const signup = async (req, res) => {
       website,
       selectedFile,
     });
-    const token = jwt.sign(
-      { email: result.email, id: result._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.status(201).json({ result, token });
+
+    const token = generateToken(newUser.email, newUser._id);
+    res.status(201).json({ result: newUser, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
-    console.log(error);
   }
 };
