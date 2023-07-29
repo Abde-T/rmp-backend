@@ -19,7 +19,7 @@ app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
 
 app.use(cors({
-  origin: [process.env.Link, "http://localhost:5173"]
+  origin: [process.env.FrontendLink, "http://localhost:5173"]
 }));
 
 app.use("/posts", postRoutes);
