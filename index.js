@@ -18,9 +18,8 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
 
-app.use(cors({
-  origin: [process.env.FrontendLink, "http://localhost:5173", "https://rmp-abde-t.vercel.app/"]
-}));
+app.use(cors());
+// origin: [process.env.FrontendLink, "http://localhost:5173", "https://rmp-abde-t.vercel.app/"]
 
 app.use("/posts", postRoutes);
 app.use("/user", userRoutes);
