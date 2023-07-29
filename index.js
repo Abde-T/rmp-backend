@@ -12,11 +12,15 @@ const app = express();
 dotenv.config();
 const cacheDuration = 60;
 
+
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
-app.use(cors());
+
+app.use(cors({
+  origin: [process.env.Link, "http://localhost:5173"]
+}));
 
 app.use("/posts", postRoutes);
 app.use("/user", userRoutes);
