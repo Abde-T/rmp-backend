@@ -18,8 +18,15 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
 
+const allowedOrigins = ['https://rmp-abde-t.vercel.app', 'http://localhost:5173'];
 app.use(cors({
-  origin: [process.env.FrontendLink, "http://localhost:5173", "https://rmp-abde-t.vercel.app"]
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
 
 app.use("/posts", postRoutes);
