@@ -19,7 +19,7 @@ app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
 
 app.use(cors({
-  origin: ['https://rmp-abde-t.vercel.app', 'http://localhost:5173'],
+  origin: '*'
 }));
 
 app.use("/posts", postRoutes);
