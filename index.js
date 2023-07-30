@@ -20,7 +20,6 @@ app.use(cacheMiddleware(cacheDuration))
 
 app.use(cors({
   origin: ['https://rmp-abde-t.vercel.app', 'http://localhost:5173'],
-  methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
 app.use("/posts", postRoutes);
