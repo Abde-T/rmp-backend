@@ -27,7 +27,7 @@ const compressImage = async (req, res, next) => {
     // Compress the image and cache the result
     const compressedImage = await sharp(buffer)
       .resize(500)
-      .jpeg({ quality: 80 }) // Change the format and quality as needed
+      .jpeg({ quality: 90 }) // Change the format and quality as needed
       .toBuffer();
 
     cache.set(cacheKey, compressedImage);

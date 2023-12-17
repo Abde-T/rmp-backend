@@ -19,7 +19,7 @@ app.use(compression());
 app.use(cacheMiddleware(cacheDuration))
 
 app.use(cors({
-  origin: '*'
+  origin: '*',
 }));
 
 app.use("/posts", postRoutes);
